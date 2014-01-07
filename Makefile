@@ -4,6 +4,7 @@ CXX = g++
 SWIG = swig
 SED_I = sed -i
 PKG_CONFIG = pkg-config
+BOOST_INCLUDE=-I/home/vagrant/local/boost/include
 
 include platform_host.mk
 
@@ -46,7 +47,8 @@ SWIG_FLAGS = -go -c++ -D__GNUC__\
 	-soname dummy \
 	-intgosize $(SWIG_INT_GO_SIZE) \
 	$(CROSS_CFLAGS) \
-	$(LIBTORRENT_CFLAGS)
+	$(LIBTORRENT_CFLAGS) \
+	$(BOOST_INCLUDE)
 
 ifeq ($(CROSS_HOME),)
 	SWIG_FLAGS += -I/usr/local/include
@@ -58,7 +60,7 @@ ifeq ($(TARGET_OS), windows)
 	LDFLAGS += -shared $(LIBTORRENT_LDFLAGS)
 else ifeq ($(TARGET_OS), linux)
 	SWIG_FLAGS += -D__linux__
-	CFLAGS += -fPIC
+	CFLAGS += -fPIC $(BOOST_INCLUDE)
 	LDFLAGS += $(LIBTORRENT_LDFLAGS) -lm -lstdc++ -ldl
 else ifeq ($(TARGET_OS), android)
 	SWIG_FLAGS += -D__linux__ -D__android__
